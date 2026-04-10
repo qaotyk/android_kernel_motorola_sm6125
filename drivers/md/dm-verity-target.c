@@ -1183,6 +1183,14 @@ int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
 		r = -E2BIG;
 		goto bad;
 	}
+v->mode = DM_VERITY_MODE_LOGGING;
+
+return 0;
+
+bad:
+	verity_dtr(ti)
+	return r;
+}
 
 	hash_position = v->hash_start;
 	for (i = v->levels - 1; i >= 0; i--) {

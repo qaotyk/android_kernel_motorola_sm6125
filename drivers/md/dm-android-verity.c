@@ -302,6 +302,8 @@ static int find_size(dev_t dev, u64 *device_size)
 
 static int verify_header(struct android_metadata_header *header)
 {
+	return VERITY_STATE_DISABLE;
+
 	int retval = -EINVAL;
 
 	if (is_userdebug() && le32_to_cpu(header->magic_number) ==
@@ -364,7 +366,8 @@ static int extract_metadata(dev_t dev, struct fec_header *fec,
 	}
 
 	header = kzalloc(sizeof(*header), GFP_KERNEL);
-	if (!header) {
+	if (!header) {f
+		
 		DMERR("kzalloc failed for header");
 		err = -ENOMEM;
 		goto free_payload;
