@@ -1,0 +1,40 @@
+# FOCALTECH_0FLASH_MMI DRIVER MOTOROLA 
+#
+# Automatic generated, don't modify
+#
+
+# Pull objects focaltech_0flash_mmi
+obj-$(CONFIG_TOUCHSCREEN_FTS) += focaltech_0flash_mmi.o
+
+# List driver components
+focaltech_0flash_mmi-objs += focaltech_core.o
+focaltech_0flash_mmi-objs += focaltech_esdcheck.o
+focaltech_0flash_mmi-objs += focaltech_ex_fun.o
+focaltech_0flash_mmi-objs += focaltech_ex_mode.o
+focaltech_0flash_mmi-objs += focaltech_flash.o
+focaltech_0flash_mmi-objs += focaltech_gesture.o
+focaltech_0flash_mmi-objs += focaltech_point_report_check.o
+focaltech_0flash_mmi-objs += focaltech_test/focaltech_test.o
+focaltech_0flash_mmi-objs += focaltech_test/focaltech_test_ini.o
+
+# Moto g(8) plus - doha
+ifneq ($(filter ft8719,$(CONFIG_INPUT_FOCALTECH_0FLASH_MMI_IC_NAME)),)
+	ccflags-y += -DCONFIG_INPUT_FOCALTECH_0FLASH_MMI_IC_NAME_FT8719
+	focaltech_0flash_mmi-objs += focaltech_test/supported_ic/focaltech_test_ft8719.o
+	focaltech_0flash_mmi-objs += focaltech_flash_ft8719.o
+	focaltech_0flash_mmi-objs += focaltech_spi_v1_1.o
+endif
+
+# Enable drivers for stylus Moto G Stylus - sofiap
+ifneq ($(filter m y,$(CONFIG_INPUT_FOCALTECH_0FLASH_MMI_ENABLE_DOUBLE_TAP)),)
+	ccflags-y += -DFOCALTECH_SENSOR_EN
+endif
+ifneq ($(filter m y,$(CONFIG_INPUT_FOCALTECH_0FLASH_MMI_ENABLE_PALM)),)
+	ccflags-y += -DFOCALTECH_PALM_SENSOR_EN
+endif
+ifneq ($(filter m y,$(CONFIG_INPUT_FOCALTECH_0FLASH_MMI_PEN_NOTIFIER)),)
+	ccflags-y += -DFOCALTECH_PEN_NOTIFIER
+endif
+ifneq ($(filter m y,$(CONFIG_INPUT_FOCALTECH_PANEL_NOTIFICATIONS)),)
+	ccflags-y += -DFOCALTECH_CONFIG_PANEL_NOTIFICATIONS
+endif
