@@ -125,13 +125,14 @@ static void dma_buf_release(struct dentry *dentry)
 
 	dmabuf->ops->release(dmabuf);
 
-	dma_buf_ref_destroy(dmabuf);
+	mutex_lock(&db_list.lock);
+	list_del(&dmabuf->list_node);
+	mutex_unlock(&db_list.lock);
 
 	if (dmabuf->resv == (struct reservation_object *)&dmabuf[1])
 		reservation_object_fini(dmabuf->resv);
 
 	module_put(dmabuf->owner);
-	dmabuf_dent_put(dmabuf);
 }
 
 static int dma_buf_file_release(struct inode *inode, struct file *file)
@@ -148,6 +149,9 @@ static int dma_buf_file_release(struct inode *inode, struct file *file)
 	mutex_unlock(&db_list.lock);
 
 	return 0;
+
+	kfree(dmabuf->name);
+	kfree(dmabuf);
 }
 
 static const struct dentry_operations dma_buf_dentry_ops = {
@@ -457,7 +461,8 @@ static long dma_buf_ioctl(struct file *file,
 
 		return ret;
 
-	case DMA_BUF_SET_NAME:
+	case DMA_BUF_SET_NAME_A:
+	case DMA_BUF_SET_NAME_B:
 		return dma_buf_set_name(dmabuf, (const char __user *)arg);
 	case DMA_BUF_IOCTL_IMPORT_BUF_ADD_BY_MOTO:
 		dmabuf->ops->import_buf_add_by_moto(dmabuf);
